@@ -36,17 +36,25 @@ while($row = mysql_fetch_array($result))
  
 date_default_timezone_set('UTC/GMT +5:30 hours');
 $datenow = date('m/d/Y h:i:s a', time());
- 
+
+
 if(isset($_POST['styled-textarea'])){
 
 $data1 = $_POST['styled-textarea'];
+$file = rand(1000,100000)."-".$_FILES['file']['name'];
+$file_loc = $_FILES['file']['tmp_name'];
+$file_size = $_FILES['file']['size'];
+$file_type = $_FILES['file']['type'];
+$folder="uploads/";
+
+move_uploaded_file($file_loc,$folder.$file);
 
 if(!empty($data1)){
 
 //$query = "insert into aims(user,today,tom,date) valuesset data = '".$data."' where id = ".$_SESSION['user_id'];
 
 
-$query = "insert into posts (user,post,date,name) VALUES('".mysql_real_escape_string($_SESSION['user_id'])."','".mysql_real_escape_string($data1)."','".mysql_real_escape_string($datenow)."','".mysql_real_escape_string($fullname)."')";
+$query = "insert into posts (user,post,date,name,file,type,size) VALUES('".mysql_real_escape_string($_SESSION['user_id'])."','".mysql_real_escape_string($data1)."','".mysql_real_escape_string($datenow)."','".mysql_real_escape_string($fullname)."','".mysql_real_escape_string($file)."','".mysql_real_escape_string($file_type)."','".mysql_real_escape_string($file_size)."')";
 
 
 if($mysql_run = mysql_query($query)){
@@ -81,19 +89,18 @@ echo 'You havent Typed Any Targets';
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 
 <head>
-	<meta charset="utf-8">
-  <meta name="viewport" content="width=device-width">
-  <title>&#3512;&#3538;&#3501;&#3540;&#3515;&#3540; &#3524;&#3512;&#3540;&#3520;</title>
- <link rel="stylesheet" href="css/normalize.css">
-  
-  <link rel="stylesheet" href="css/foundation.css">
-    <link rel="stylesheet" href="css/grid-5.css">
+	 <meta charset="utf-8">
+ 	 <meta name="viewport" content="width=device-width">
+ 	 <title>&#3512;&#3538;&#3501;&#3540;&#3515;&#3540; &#3524;&#3512;&#3540;&#3520;</title>
+	 <link rel="stylesheet" href="css/normalize.css">
+   	 <link rel="stylesheet" href="css/foundation.css">
+   	 <link rel="stylesheet" href="css/grid-5.css">
 
-  <script src="js/vendor/custom.modernizr.js"></script>
+ 	 <script src="js/vendor/custom.modernizr.js"></script>
 
 </head>
 <body>
-<!-- Header and Nav -->
+	<!-- Header and Nav -->
  
   <div class="row">
     <div class="large-12 columns">
@@ -131,11 +138,17 @@ echo 'You havent Typed Any Targets';
       <div class="row">
         <div class="large-2 columns small-3"><img src="images/user.jpg" height="42" width="42"/></div>
         <div class="large-10 columns">
-          <form action = "home.php" method = "POST">
+          <form action = "home.php" method = "POST" enctype="multipart/form-data">
+	 
 <textarea name="styled-textarea" id="styled" onfocus="this.value=''; setbg('#e5fff3');" onblur="setbg('white')">&#3512;&#3546; &#3512;&#3548;&#3524;&#3548;&#3501;&#3546; &#3461;&#3503;&#3524;&#3523;&#3482;&#3530;...</textarea>
 
 </textarea>
-<input type = "Submit" class="success button"  value = "&#3512;&#3540;&#3503;&#3535; &#3524;&#3515;&#3538;&#3505;&#3530;&#3505;">
+Upload Your Tutes
+
+<input type="file" name="file" /><br>	
+<input type = "Submit" class="success button" name="btn-upload"	  value = "&#3512;&#3540;&#3503;&#3535; &#3524;&#3515;&#3538;&#3505;&#3530;&#3505;">
+<br>
+
 </form>
 
          
@@ -146,7 +159,7 @@ echo 'You havent Typed Any Targets';
  
 <?php
 
-$query = "select * from posts";
+$query = "select * from posts ORDER BY ID DESC LIMIT 10";
 
 if($query_run = mysql_query($query)){
 
@@ -167,6 +180,7 @@ for($i = $query_num_rows - 1 ;$i > 0;$i--){
         echo'<div class="large-10 columns">';
           echo'<p><strong>'.mysql_result($query_run,$i,name).' said:</strong>'.mysql_result($query_run,$i,post).' on '.mysql_result($query_run,$i,date).'</p>';
           echo'<ul class="inline-list">';
+          echo '<li><a href="uploads/'.mysql_result($query_run,$i,file).'"">view file</a></li>';
             echo'<li><a href="">Reply</a></li>';
             echo'<li><a href="">Share</a></li>';
           echo'</ul>';
