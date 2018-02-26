@@ -1,108 +1,57 @@
 <?php
 
-
 require 'corei.inc.php';
-
 require 'connect.inc.php';
 $username = '';
-
-
 $firstname = '';
 $surname = '';
 
 if(!loggedin()){
+  if(isset($_POST['username'])&&isset($_POST['password'])&&isset($_POST['password_again'])&&isset($_POST['fullname'])&&isset($_POST['styled-textarea'])){
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+    $password_again = $_POST['password_again'];
+    $password_hash = md5($password);
+    $fullname = $_POST['fullname'];
+    $about = $_POST['styled-textarea'];
 
+  if(!empty($username)&&!empty($password)&&!empty($password_again)&&!empty($fullname)&&!empty($about)){
+    if($password != $password_again){
+      echo 'Password Do not match';
+    }else if(!filter_var($username, FILTER_VALIDATE_EMAIL)){
+      echo "E-mail is not valid";
+    }else{
+      $query = "SELECT username FROM user WHERE username = '$username'";
+      $query_run = mysql_query($query);
+      if(mysql_num_rows($query_run)==1){
+        echo 'The username '.$username.' already exists';
+      }else{
 
+        $query1 = "INSERT INTO user(username,password,fullname,about) VALUES ('".mysql_real_escape_string($username)."','".mysql_real_escape_string($password_hash)."','".mysql_real_escape_string($fullname)."','".mysql_real_escape_string($about)."')";
+        //$query2 = "ALTER TABLE user ADD COLUMN ".$username." varchar(40) default 'no'";
+        //if(($query_run = mysql_query($query1))&&($query_run2 = mysql_query($query2))){
+        // $to = $username;
+        // $subject = "Mithuru Registration Successfull";
+        // $message = "Hello ! Thanks you for your idea to be a part of this Network ....  Your account has been created please login from here http://mithuru.host22.com/ use your Email address as the Account name .... Enjoy this... Thanks
+        //              (Your Regards Designer)  ";
 
-
-
-if(isset($_POST['username'])&&isset($_POST['password'])&&isset($_POST['password_again'])&&isset($_POST['fullname'])&&isset($_POST['styled-textarea'])){
-$username = $_POST['username'];
-
-
-
-
-
-
-
-$password = $_POST['password'];
-$password_again = $_POST['password_again'];
-
-$password_hash = md5($password);
-$fullname = $_POST['fullname'];
-$about = $_POST['styled-textarea'];
-
-if(!empty($username)&&!empty($password)&&!empty($password_again)&&!empty($fullname)&&!empty($about)){
-if($password != $password_again){
-echo 'Password Do not match';
-}
-
- else if(!filter_var($username, FILTER_VALIDATE_EMAIL))
-  {
-  echo "E-mail is not valid";
+        // $from = "admin@mithuru.host22.com";
+        // $headers = "From: " . $from;
+        // mail($to,$subject,$message,$headers);
+          // echo "Mail Sent.";
+          if($query_run = mysql_query($query1)){
+            header('Location: register_sucess.php');
+          }
+          else{
+            echo 'Sorry We Could not register you at this time Try Again later';
+          }
+      }
+    }
   }
-
-else{
-
-$query = "SELECT username FROM user WHERE username = '$username'";
-
-$query_run = mysql_query($query);
-
-if(mysql_num_rows($query_run)==1){
-
-
-echo 'The username '.$username.' already exists';
-
-}
-else{
-
-$query1 = "INSERT INTO user(id,username,password,fullname,about) VALUES ('','".mysql_real_escape_string($username)."','".mysql_real_escape_string($password_hash)."','".mysql_real_escape_string($fullname)."','".mysql_real_escape_string($about)."')";   
-//$query2 = "ALTER TABLE user ADD COLUMN ".$username." varchar(40) default 'no'";                                 
-//if(($query_run = mysql_query($query1))&&($query_run2 = mysql_query($query2))){
-
-
-
-$to = $username;
-$subject = "Mithuru Registration Successfull";
-
-$message = "Hello ! Thanks you for your idea to be a part of this Network ....  Your account has been created please login from here http://mithuru.host22.com/ use your Email address as the Account name .... Enjoy this... Thanks 
-             (Your Regards Designer)  ";
-           
-
-
-
-$from = "admin@mithuru.host22.com";
-$headers = "From: " . $from;
-mail($to,$subject,$message,$headers);
-echo "Mail Sent.";
-
-if($query_run = mysql_query($query1)){
-
-
-
-
-header('Location: register_sucess.php');
-
-
-
-}
-
-else{
-echo 'Sorry We Could not register you at this time Try Again later';
-}
-
-}
-
-}
-}
-
-else{
-echo 'All Fields are required';
-
-
-}
-
-}
+  else{
+    echo 'All Fields are required';
+  }
+  }
 
 ?>
 
@@ -115,9 +64,9 @@ echo 'All Fields are required';
   <meta name="viewport" content="width=device-width">
   <title>&#3512;&#3538;&#3501;&#3540;&#3515;&#3540; &#3524;&#3512;&#3540;&#3520;</title>
 
-  
+
   <link rel="stylesheet" href="css/foundation.css">
-  
+
 
   <script src="js/vendor/custom.modernizr.js"></script>
 
@@ -172,26 +121,26 @@ Password Again :<input type = "password" name = "password_again"> <br><br>
 			</div>
 			<div class="row">
 				<div class="large-6 columns">
-					
+
 				</div>
 				<div class="large-6 columns">
-					
+
 				</div>
 			</div>
 			<div class="row">
 				<div class="large-4 columns">
-					
+
 				</div>
 				<div class="large-4 columns">
-					
+
 				</div>
 				<div class="large-4 columns">
-					
+
 				</div>
 			</div>
 
 
-     
+
 		</div>
 
 		<div class="large-4 columns">
@@ -201,7 +150,7 @@ Password Again :<input type = "password" name = "password_again"> <br><br>
 			<h4>&#3520;&#3536;&#3503;&#3484;&#3501;&#3530;</h4>
 			<p>&#3461;&#3508;&#3538;&#3495; &#3503;&#3520;&#3523;&#3546; &#3482;&#3548;&#3488;&#3530;&#3488;&#3515; &#3523;&#3535;&#3515;&#3530;&#3502;&#3482;&#3501;&#3530;&#3520;&#3514;&#3482;&#3530; &#3517;&#3536;&#3510;&#3540;&#3520;&#3503; &#3461;&#3508;&#3495; &#3520;&#3540;&#3505;&#3540; &#3461;&#3497;&#3540;&#3508;&#3535;&#3497;&#3540; &#3510;&#3517;&#3535;&#3484;&#3505;&#3530;&#3505;&#3501;&#3530; &#3508;&#3540;&#3517;&#3540;&#3520;&#3505;&#3530; ...</p>
 <p>&#3473;&#3520;&#3484;&#3546;&#3512; &#3512;&#3538;&#3501;&#3540;&#3515;&#3505;&#3530; &#3523;&#3512;&#3484; &#3473;&#3482;&#3530; &#3520;&#3539;&#3512;&#3495;&#3501;&#3530; &#3476;&#3510;&#3495; &#3508;&#3540;&#3517;&#3540;&#3520;&#3505;&#3530;.....</p>
-			
+
 		</div>
 	</div>
 
@@ -210,44 +159,44 @@ Password Again :<input type = "password" name = "password_again"> <br><br>
   ('__proto__' in {} ? 'js/vendor/zepto' : 'js/vendor/jquery') +
   '.js><\/script>')
   </script>
-  
+
   <script src="js/foundation.min.js"></script>
   <!--
-  
+
   <script src="js/foundation/foundation.js"></script>
-  
+
   <script src="js/foundation/foundation.interchange.js"></script>
-  
+
   <script src="js/foundation/foundation.abide.js"></script>
-  
+
   <script src="js/foundation/foundation.dropdown.js"></script>
-  
+
   <script src="js/foundation/foundation.placeholder.js"></script>
-  
+
   <script src="js/foundation/foundation.forms.js"></script>
-  
+
   <script src="js/foundation/foundation.alerts.js"></script>
-  
+
   <script src="js/foundation/foundation.magellan.js"></script>
-  
+
   <script src="js/foundation/foundation.reveal.js"></script>
-  
+
   <script src="js/foundation/foundation.tooltips.js"></script>
-  
+
   <script src="js/foundation/foundation.clearing.js"></script>
-  
+
   <script src="js/foundation/foundation.cookie.js"></script>
-  
+
   <script src="js/foundation/foundation.joyride.js"></script>
-  
+
   <script src="js/foundation/foundation.orbit.js"></script>
-  
+
   <script src="js/foundation/foundation.section.js"></script>
-  
+
   <script src="js/foundation/foundation.topbar.js"></script>
-  
+
   -->
-  
+
   <script>
     $(document).foundation();
   </script>

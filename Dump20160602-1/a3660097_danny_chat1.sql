@@ -1,5 +1,5 @@
-CREATE DATABASE  IF NOT EXISTS `a3660097_danny` /*!40100 DEFAULT CHARACTER SET latin1 */;
-USE `a3660097_danny`;
+CREATE DATABASE  IF NOT EXISTS `mithuru` /*!40100 DEFAULT CHARACTER SET latin1 */;
+USE `mithuru`;
 -- MySQL dump 10.13  Distrib 5.5.49, for debian-linux-gnu (x86_64)
 --
 -- Host: 127.0.0.1    Database: a3660097_danny

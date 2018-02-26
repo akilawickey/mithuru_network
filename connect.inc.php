@@ -1,30 +1,10 @@
 <?php
-
-$mysql_host = 'localhost';
+$mysql_host = '127.0.0.1';
 $mysql_user = "root";
 $mysql_password = "root";
+$mysql_db = 'mithuru';
 
-
-$mysql_db = 'a3660097_danny';
-
-
-if(!mysql_connect($mysql_host,$mysql_user,$mysql_password) || !mysql_select_db($mysql_db)){
-
-die(mysql_error());
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  if(!mysql_connect($mysql_host,$mysql_user,$mysql_password) || !mysql_select_db($mysql_db)){
+    die(mysql_error());
+  }
 ?>
